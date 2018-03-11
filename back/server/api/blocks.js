@@ -1,6 +1,6 @@
 'use strict';
 
-const Block = require('../models/Block');
+const Block = require('../models/block');
 const Joi = require('joi');
 const _ = require('lodash');
 

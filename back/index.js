@@ -1,4 +1,5 @@
 'use strict';
+const Block = require('./server/models/block');
 const Config = require('./config');
 const Glue = require('glue');
 const Hapi = require('hapi');
@@ -33,6 +34,7 @@ exports.deployment = async (start) => {
 
     Log.info(`Websocket port is ${socketServer.info.port}`);
 
+/*
     const publish = async function () {
         Log.debug('publishing block update to socket');
         const options = {url: '/api/blocks'}
@@ -41,7 +43,18 @@ exports.deployment = async (start) => {
     }
 
     setInterval(publish, 5000);
-
+*/
+    const publish = async function () {
+        const options = {url: '/api/blocks'}
+        Block.watch().on('change', async change => {
+            // We may want to pull data from the change stream
+            // itself in the future.  This is easier for the full page
+            let blocks = (await server.inject('/api/blocks')).result;
+            Log.debug('publishing block update to socket');
+            socketServer.publish('/blocks', blocks);
+        });
+    }
+    publish();
 
     Log.info(`Server started at ${server.info.uri}`);
     return server;

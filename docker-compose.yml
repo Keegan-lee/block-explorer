@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+    mongo1:
+        image: mongo:3.7.2
+        command: --storageEngine wiredTiger --smallfiles --oplogSize 128 --replSet rs0 --dbpath /data/db
+        ports:
+            - "27017:27017"
+        volumes:
+            - data_rs1:/data/db
+    mongo2:
+        image: mongo:3.7.2
+        command: --storageEngine wiredTiger --smallfiles --oplogSize 128 --replSet rs0 --dbpath /data/db
+        ports:
+            - "27018:27017"
+        volumes:
+            - data_rs2:/data/db
+volumes:
+  data_rs1:
+  data_rs2:
